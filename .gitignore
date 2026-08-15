@@ -9,3 +9,7 @@
 .cxx
 *.apk
 /app/build
+
+# Original generated media — kept locally as source-of-truth backups;
+# renamed copies actually used by the app live in app/src/main/res/raw/.
+/narration/
