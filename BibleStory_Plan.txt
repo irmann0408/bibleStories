@@ -1,0 +1,563 @@
+An interactive storybook with clickable elements and navigation buttons will make the story super engaging for my daughter.
+1. Key Features for an Interactive Storybook
+	Page Navigation (Next / Previous buttons): Allows seamless flipping through story scenes.
+	Media Playback: Playing your generated short video loops (.mp4) or audio clips per scene.
+	Clickable Scene Elements ("Hotspots"): Tapping on David, Goliath, or the sling triggers sound effects, simple animations, or voiceover narration.
+	Narrative Text Overlay: Clear text at the bottom or top of the screen that can optionally read aloud when tapped.
+2. Tech Stack Recommendations
+Language: Kotlin - Modern, concise, and the official language for modern Android development.
+UI Framework: Jetpack Compose - Makes UI layout, state management, and custom click interactions infinitely easier than old XML layouts.
+Video Playback: Media3 / ExoPlayer - The standard Android library for smooth video and audio playback.
+3. High-Level Architecture Blueprint
+A. Data Structure 
+1. StoryPage.kt
+package com.example.biblestorybook.model
+
+
+import androidx.annotation.RawRes
+
+
+/**
+ * Represents an interactive element within a story scene.
+ *
+ * x and y represent the TOP-LEFT position as a ratio of the screen:
+ * 0.0 = left/top
+ * 1.0 = right/bottom
+ *
+ * width and height are also ratios of the available screen size.
+ */
+data class Hotspot(
+    val id: String,
+    val x: Float,
+    val y: Float,
+    val width: Float,
+    val height: Float,
+    val action: HotspotAction
+)
+
+
+/**
+ * Actions that can be triggered by tapping a hotspot.
+ */
+sealed class HotspotAction {
+
+
+    data class PlaySound(
+        @RawRes val soundResId: Int
+    ) : HotspotAction()
+
+
+    data class PlayNarration(
+        @RawRes val audioResId: Int
+    ) : HotspotAction()
+
+
+    data class PlayAnimation(
+        val animationId: String
+    ) : HotspotAction()
+
+
+    data class SoundAndAnimation(
+        @RawRes val soundResId: Int,
+        val animationId: String
+    ) : HotspotAction()
+}
+
+
+/**
+ * Represents one page/scene in the interactive storybook.
+ */
+data class StoryPage(
+    val id: Int,
+    val title: String,
+
+
+    // Animated scene
+    @RawRes val videoResId: Int,
+
+
+    // Text displayed on screen
+    val narrationText: String,
+
+
+    // Optional recorded narration
+    @RawRes val narrationAudioResId: Int? = null,
+
+
+    // Optional background music
+    @RawRes val backgroundMusicResId: Int? = null,
+
+
+    // Interactive objects
+    val hotspots: List<Hotspot> = emptyList()
+)
+2. Example story data
+
+I'd keep your actual story content separate from the UI.
+
+For example, DavidAndGoliathStory.kt:
+
+package com.example.biblestorybook.story
+
+
+                Hotspot(
+                    id = "david",
+                    x = 0.20f,
+                    y = 0.40f,
+                    width = 0.25f,
+                    height = 0.45f,
+
+
+                    action = HotspotAction.PlayAnimation(
+                        animationId = "david_harp"
+                    )
+                ),
+
+
+                Hotspot(
+                    id = "sheep_01",
+                    x = 0.65f,
+                    y = 0.55f,
+                    width = 0.18f,
+                    height = 0.20f,
+
+
+                    action = HotspotAction.SoundAndAnimation(
+                        soundResId = R.raw.sheep_baa,
+                        animationId = "sheep_bounce"
+                    )
+                )
+            )
+        ),
+
+
+        StoryPage(
+            id = 6,
+            title = "The Confrontation",
+
+
+            videoResId = R.raw.david_scene_06,
+
+
+            narrationText =
+                "Goliath laughed when he saw a boy walking toward him. " +
+                "But David shouted back, " +
+                "\"You come against me with a sword and spear, " +
+                "but I come against you in the name of the Lord!\"",
+
+
+            narrationAudioResId = R.raw.david_scene_06_narration,
+
+
+            backgroundMusicResId = R.raw.dramatic_battle_music,
+
+
+            hotspots = listOf(
+
+
+                Hotspot(
+                    id = "goliath",
+                    x = 0.65f,
+                    y = 0.25f,
+                    width = 0.30f,
+                    height = 0.65f,
+
+
+                    action = HotspotAction.SoundAndAnimation(
+                        soundResId = R.raw.goliath_laugh,
+                        animationId = "goliath_laugh"
+                    )
+                ),
+
+
+                Hotspot(
+                    id = "david",
+                    x = 0.10f,
+                    y = 0.35f,
+                    width = 0.30f,
+                    height = 0.55f,
+
+
+                    action = HotspotAction.PlayAnimation(
+                        animationId = "david_sling"
+                    )
+                ),
+
+
+                Hotspot(
+                    id = "sling",
+                    x = 0.15f,
+                    y = 0.20f,
+                    width = 0.35f,
+                    height = 0.25f,
+
+
+                    action = HotspotAction.SoundAndAnimation(
+                        soundResId = R.raw.sling_whoosh,
+                        animationId = "sling_spin"
+                    )
+                )
+            )
+        )
+    )
+}
+
+You'd obviously add Scenes 2–5 and 7 afterward.
+
+3. StoryBookScreen.kt
+
+Here's where I'd change your original implementation most significantly.
+
+package com.example.biblestorybook.ui
+            StoryHotspot(
+                hotspot = hotspot,
+
+
+                screenWidth = screenWidth,
+                screenHeight = screenHeight,
+
+
+                onTriggered = { action ->
+
+
+                    handleHotspotAction(action)
+
+
+                }
+            )
+        }
+
+
+        /*
+         * ---------------------------------------------------------
+         * 3. NARRATION PANEL
+         * ---------------------------------------------------------
+         */
+
+
+        NarrationPanel(
+            text = currentPage.narrationText,
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth()
+                .padding(16.dp)
+        )
+
+
+        /*
+         * ---------------------------------------------------------
+         * 4. NAVIGATION
+         * ---------------------------------------------------------
+         */
+
+
+        Row(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 16.dp)
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp),
+
+
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+
+
+            Button(
+                onClick = {
+
+
+                    if (currentPageIndex > 0) {
+                        currentPageIndex--
+                    }
+
+
+                },
+
+
+                enabled = currentPageIndex > 0
+            ) {
+                Text("Previous")
+            }
+
+
+            Button(
+                onClick = {
+
+
+                    if (currentPageIndex < pages.lastIndex) {
+                        currentPageIndex++
+                    }
+
+
+                },
+
+
+                enabled = currentPageIndex < pages.lastIndex
+            ) {
+                Text("Next")
+            }
+        }
+    }
+}
+4. The Hotspot component
+
+This is the important bit.
+
+The hotspot position is now based on ratios, rather than fixed pixel coordinates.
+
+@Composable
+private fun StoryHotspot(
+    hotspot: Hotspot,
+    screenWidth: Float,
+    screenHeight: Float,
+    onTriggered: (HotspotAction) -> Unit
+) {
+
+
+    val xPosition =
+        (screenWidth * hotspot.x).roundToInt()
+
+
+    val yPosition =
+        (screenHeight * hotspot.y).roundToInt()
+
+
+    val hotspotWidth =
+        (screenWidth * hotspot.width)
+            .roundToInt()
+
+
+    val hotspotHeight =
+        (screenHeight * hotspot.height)
+            .roundToInt()
+
+
+    Box(
+        modifier = Modifier
+            .offset {
+                IntOffset(
+                    x = xPosition,
+                    y = yPosition
+                )
+            }
+            .width(hotspotWidth.dp)
+            .height(hotspotHeight.dp)
+            .clickable {
+
+
+                onTriggered(hotspot.action)
+
+
+            }
+
+
+        // IMPORTANT:
+        // No background here.
+        //
+        // The hotspot is invisible during normal gameplay.
+    )
+}
+
+This means you can define:
+
+David:
+x = 0.20
+y = 0.40
+width = 0.25
+height = 0.45
+
+and the clickable area will scale with the device.
+
+5. Hotspot action handler
+
+I'd keep the actual sound/animation logic outside the UI.
+
+private fun handleHotspotAction(
+    action: HotspotAction
+) {
+
+
+    when (action) {
+
+
+        is HotspotAction.PlaySound -> {
+
+
+            playSound(action.soundResId)
+
+
+        }
+
+
+        is HotspotAction.PlayNarration -> {
+
+
+            playNarration(action.audioResId)
+
+
+        }
+
+
+        is HotspotAction.PlayAnimation -> {
+
+
+            playAnimation(action.animationId)
+
+
+        }
+
+
+        is HotspotAction.SoundAndAnimation -> {
+
+
+            playSound(action.soundResId)
+
+
+            playAnimation(action.animationId)
+
+
+        }
+    }
+}
+
+Then your media system can handle the actual implementation.
+
+For example:
+
+playSound()
+      ↓
+AudioManager
+      ↓
+Media3 / SoundPool
+
+
+playNarration()
+      ↓
+NarrationManager
+      ↓
+Media3
+
+
+playAnimation()
+      ↓
+AnimationController
+      ↓
+Scene animation
+6. Narration panel
+
+I'd make this its own component too.
+
+@Composable
+private fun NarrationPanel(
+    text: String,
+    modifier: Modifier = Modifier
+) {
+
+
+    Column(
+        modifier = modifier
+            .background(
+                Color.Black.copy(alpha = 0.65f)
+            )
+            .padding(16.dp)
+    ) {
+
+
+        Text(
+            text = text,
+            color = Color.White
+        )
+    }
+}
+
+Later we can make this much prettier with the storybook design you've been creating — wooden frame, parchment panel, narrator character portrait, speaker button, etc.
+
+7. One thing I'd add to StoryPage
+
+Since you're already producing narration, I'd add automatic playback control.
+
+I'd eventually change:
+
+val narrationAudioResId: Int? = null
+
+to something like:
+
+data class Narration(
+    val text: String,
+    @RawRes val audioResId: Int?,
+    val autoPlay: Boolean = true
+)
+
+Then:
+
+data class StoryPage(
+    val id: Int,
+    val title: String,
+    @RawRes val videoResId: Int,
+
+
+    val narration: Narration,
+
+
+    @RawRes val backgroundMusicResId: Int? = null,
+
+
+    val hotspots: List<Hotspot> = emptyList()
+)
+
+That gives you:
+
+narration = Narration(
+    text = "Goliath laughed when he saw...",
+    audioResId = R.raw.scene_06_narration,
+    autoPlay = true
+)
+
+Much cleaner.
+
+🧠 The architecture I'd settle on
+
+Ultimately, mate, I'd aim for this:
+
+                    BIBLE STORYBOOK
+                           │
+                           ▼
+                  ┌─────────────────┐
+                  │  StoryRepository │
+                  └────────┬────────┘
+                           │
+                           ▼
+                     StoryPage
+                           │
+             ┌─────────────┼─────────────┐
+             ▼             ▼             ▼
+          Video         Narration      Hotspots
+             │             │             │
+             ▼             ▼             ▼
+         Media3        Media3       Interaction
+                                       │
+                              ┌────────┼────────┐
+                              ▼        ▼        ▼
+                            Sound  Animation  Voice
+
+And then your stories become data:
+
+stories/
+│
+├── david_and_goliath
+│   ├── scene01
+│   ├── scene02
+│   ├── scene03
+│   ├── scene04
+│   ├── scene05
+│   ├── scene06
+│   └── scene07
+│
+├── noahs_ark
+│
+├── feeding_5000
+│
+├── daniel_lions
+│
+└── jesus_calms_storm

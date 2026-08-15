@@ -1,0 +1,20 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- open book -->
+    <path
+        android:fillColor="#F5E6C8"
+        android:pathData="M24,38 L84,38 L84,76 L24,76 Z" />
+    <path
+        android:fillColor="#6B4423"
+        android:pathData="M52,38 L56,38 L56,76 L52,76 Z" />
+    <!-- cross above the book -->
+    <path
+        android:fillColor="#D4AF37"
+        android:pathData="M52,12 L56,12 L56,30 L52,30 Z" />
+    <path
+        android:fillColor="#D4AF37"
+        android:pathData="M44,18 L64,18 L64,22 L44,22 Z" />
+</vector>
