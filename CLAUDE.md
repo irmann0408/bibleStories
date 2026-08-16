@@ -272,8 +272,8 @@ StoryRepository → StoryPage → { Video, Narration, Hotspots }
   gesture/button).
 - **Multi-story navigation**: `model/Story.kt` wraps a story's `id`,
   `title`, and `pages`; `story/StoryLibrary.kt` lists every playable
-  `Story` (currently just `david_and_goliath` — add a new story by adding
-  one entry here). `ui/StorySelectionScreen.kt` renders a card per
+  `Story` (`david_and_goliath`, `noahs_ark` — add a new story by adding one
+  entry here). `ui/StorySelectionScreen.kt` renders a card per
   `StoryLibrary` entry with a Play button. `ui/BibleStorybookApp.kt` is the
   top-level composable (set as `MainActivity`'s content) that switches
   between `StorySelectionScreen` and `StoryBookScreen` using plain local
@@ -287,6 +287,12 @@ StoryRepository → StoryPage → { Video, Narration, Hotspots }
   the media-playback engine — three distinct layers: data → UI → playback.
 - Prefer ratio-based (0.0–1.0) coordinates for anything screen-position
   related; never hardcode pixel positions for hotspots.
+- `res/raw` asset naming: every story after `david_and_goliath` prefixes
+  its files with the story id, e.g. `noahs_ark_scene_01.mp4` /
+  `noahs_ark_scene_01_narration.mp3`, to avoid collisions as more stories
+  are added. `david_and_goliath`'s files predate this convention and stay
+  unprefixed (`scene_01.mp4`...`scene_08.mp4`) — left as-is rather than
+  renaming already-working resources for a cosmetic-only change.
 - New stories follow the same `stories/<story_name>/sceneNN` folder shape as
   `david_and_goliath` (see plan for `noahs_ark`, `feeding_5000`,
   `daniel_lions`, `jesus_calms_storm` as planned future stories).

@@ -87,7 +87,10 @@ object DavidAndGoliathStory {
             title = "Glory to God",
             videoResId = R.raw.scene_08,
             narration = Narration(
-                text = "Remember... When we are afraid, we can trust God.",
+                text = "Remember... When we are afraid, we can trust God. " +
+                    "1 Samuel 17:50, \"So David triumphed over the Philistine with a " +
+                    "sling and a stone; without a sword in his hand he struck down " +
+                    "the Philistine and killed him.\"",
                 audioResId = R.raw.scene_08_narration
             )
         )
