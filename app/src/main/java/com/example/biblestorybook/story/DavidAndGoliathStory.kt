@@ -34,8 +34,7 @@ object DavidAndGoliathStory {
             videoResId = R.raw.scene_03,
             narration = Narration(
                 text = "David came to the camp to bring food to his older brothers. " +
-                    "When he saw the army hiding, he asked, 'Why is everyone afraid? " +
-                    "God will help us defeat this giant!'",
+                    "When he saw the army hiding, he asked, 'Why is everyone afraid?'",
                 audioResId = R.raw.scene_03_narration
             )
         ),
@@ -45,8 +44,8 @@ object DavidAndGoliathStory {
             videoResId = R.raw.scene_04,
             narration = Narration(
                 text = "King Saul offered David his own heavy armor and sharp sword. " +
-                    "But David could barely move! He smiled and said, 'I cannot wear " +
-                    "this. I trust in God's strength, not a heavy suit of metal.'",
+                    "But David could barely move! He smiled and said that he cannot " +
+                    "wear the armor.",
                 audioResId = R.raw.scene_04_narration
             )
         ),
