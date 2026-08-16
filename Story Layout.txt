@@ -26,3 +26,7 @@ Narration Text: "Goliath laughed when he saw a boy walking toward him. But David
 Scene 7: Victory
 Visual Animation: David releases the sling. A streak of light flies across the screen. Goliath’s eyes go wide, and he falls forward with a dramatic (but child-friendly) crash, causing dust clouds to puff up. David stands victoriously.
 Narration Text: "With a mighty swing, David let the stone fly. Thwack! It struck Goliath right on the forehead, and the giant fell to the ground. God had saved His people through a brave shepherd boy."
+
+Scene 8: Glory to God
+Visual Animation: David victorious but still humble and praying to God.
+Narration Text: "Remember...When we are afraid, we can trust God."

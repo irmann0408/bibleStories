@@ -81,6 +81,15 @@ object DavidAndGoliathStory {
                     "ground. God had saved His people through a brave shepherd boy.",
                 audioResId = R.raw.scene_07_narration
             )
+        ),
+        StoryPage(
+            id = 8,
+            title = "Glory to God",
+            videoResId = R.raw.scene_08,
+            narration = Narration(
+                text = "Remember... When we are afraid, we can trust God.",
+                audioResId = R.raw.scene_08_narration
+            )
         )
     )
 }
