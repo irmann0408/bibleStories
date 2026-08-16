@@ -4,8 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.example.biblestorybook.story.DavidAndGoliathStory
-import com.example.biblestorybook.ui.StoryBookScreen
+import com.example.biblestorybook.ui.BibleStorybookApp
 import com.example.biblestorybook.ui.theme.BibleStorybookTheme
 
 class MainActivity : ComponentActivity() {
@@ -14,7 +13,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             BibleStorybookTheme {
-                StoryBookScreen(pages = DavidAndGoliathStory.pages)
+                BibleStorybookApp()
             }
         }
     }

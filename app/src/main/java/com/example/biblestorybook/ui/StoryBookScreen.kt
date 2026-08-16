@@ -1,15 +1,24 @@
 package com.example.biblestorybook.ui
 
 import android.net.Uri
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -21,8 +30,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
@@ -31,8 +42,11 @@ import com.example.biblestorybook.model.StoryPage
 @Composable
 fun StoryBookScreen(
     pages: List<StoryPage>,
+    onBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    BackHandler(onBack = onBack)
+
     val context = LocalContext.current
     var currentPageIndex by rememberSaveable { mutableIntStateOf(0) }
     val currentPage = pages[currentPageIndex]
@@ -61,21 +75,25 @@ fun StoryBookScreen(
 
     LaunchedEffect(currentPageIndex) {
         // Background video: autoplay, loop, own audio (character dialogue).
-        videoPlayer.volume = 1f
         videoPlayer.setMediaItem(rawResMediaItem(context.packageName, currentPage.videoResId))
         videoPlayer.repeatMode = Player.REPEAT_MODE_ONE
         videoPlayer.prepare()
         videoPlayer.playWhenReady = true
 
-        // Narration: prepared and ready, but never autoplays — only starts
-        // when the user taps the narration panel.
+        // Narration: prepared and ready. Autoplays alongside the video by
+        // default — the user can still tap the narration panel to replay it.
         narrationPlayer.stop()
+        val willAutoPlayNarration = currentPage.narration.autoPlay &&
+            currentPage.narration.audioResId != null
         currentPage.narration.audioResId?.let { resId ->
             narrationPlayer.setMediaItem(rawResMediaItem(context.packageName, resId))
             narrationPlayer.repeatMode = Player.REPEAT_MODE_OFF
             narrationPlayer.prepare()
-            narrationPlayer.playWhenReady = false
+            narrationPlayer.playWhenReady = willAutoPlayNarration
         }
+
+        // Video stays muted for as long as narration is playing.
+        videoPlayer.volume = if (willAutoPlayNarration) 0f else 1f
     }
 
     Box(modifier = modifier.fillMaxSize()) {
@@ -99,10 +117,25 @@ fun StoryBookScreen(
             }
         }
 
+        Button(
+            onClick = onBack,
+            modifier = Modifier
+                .align(Alignment.TopStart)
+                .windowInsetsPadding(WindowInsets.safeDrawing)
+                .padding(16.dp)
+                .size(48.dp),
+            shape = CircleShape,
+            colors = ButtonDefaults.buttonColors(containerColor = Color.Black.copy(alpha = 0.5f)),
+            contentPadding = PaddingValues(0.dp)
+        ) {
+            Text("←", color = Color.White, fontSize = 20.sp)
+        }
+
         Column(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
+                .windowInsetsPadding(WindowInsets.navigationBars)
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {

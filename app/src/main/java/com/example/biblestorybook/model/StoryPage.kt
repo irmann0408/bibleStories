@@ -42,13 +42,14 @@ sealed class HotspotAction {
 }
 
 /**
- * A scene's narration voiceover. autoPlay defaults to false: narration is
- * tap-to-play from the on-screen text panel, not played automatically.
+ * A scene's narration voiceover. autoPlay defaults to true: narration
+ * starts alongside the scene's video, muting it for the duration. The
+ * on-screen text panel can still be tapped to replay narration at any time.
  */
 data class Narration(
     val text: String,
     @RawRes val audioResId: Int? = null,
-    val autoPlay: Boolean = false
+    val autoPlay: Boolean = true
 )
 
 /**

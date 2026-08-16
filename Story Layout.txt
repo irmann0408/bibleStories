@@ -9,11 +9,11 @@ Narration Text: "One day, a huge warrior named Goliath challenged the Israelite 
 
 Scene 3: David Arrives
 Visual Animation: David arrives at the army camp carrying a small basket of food. He looks confused as he watches the soldiers run away in fear from Goliath. David stands tall and confident.
-Narration Text: "David came to the camp to bring food to his older brothers. When he saw the army hiding, he asked, 'Why is everyone afraid? God will help us defeat this giant!'"
+Narration Text: "David came to the camp to bring food to his older brothers. When he saw the army hiding, he asked, 'Why is everyone afraid?'"
 
 Scene 4: The Heavy Armor
 Visual Animation: King Saul tries to place a giant, heavy gold helmet and a massive sword onto David. The armor drops right over David's eyes, and he clumsily wobbles under the weight.
-Narration Text: "King Saul offered David his own heavy armor and sharp sword. But David could barely move! He smiled and said, 'I cannot wear this. I trust in God's strength, not a heavy suit of metal.'"
+Narration Text: "King Saul offered David his own heavy armor and sharp sword. But David could barely move! He smiled and said that he cannot wear the armor.
 
 Scene 5: Five Smooth Stones
 Visual Animation: David kneels down next to a sparkling, moving stream. He carefully picks up five smooth, round stones, putting them into his leather pouch. He holds up his simple wooden slingshot.
