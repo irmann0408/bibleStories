@@ -18,6 +18,11 @@ object StoryLibrary {
             id = "david_and_goliath",
             title = "David & Goliath",
             pages = DavidAndGoliathStory.pages
+        ),
+        Story(
+            id = "good_samaritan",
+            title = "The Good Samaritan",
+            pages = GoodSamaritanStory.pages
         )
     )
 }
