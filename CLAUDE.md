@@ -272,8 +272,8 @@ StoryRepository → StoryPage → { Video, Narration, Hotspots }
   gesture/button).
 - **Multi-story navigation**: `model/Story.kt` wraps a story's `id`,
   `title`, and `pages`; `story/StoryLibrary.kt` lists every playable
-  `Story` (`david_and_goliath`, `noahs_ark`, `good_samaritan` — add a new
-  story by adding one entry here). `ui/StorySelectionScreen.kt` renders a card per
+  `Story` (`david_and_goliath`, `noahs_ark`, `good_samaritan`,
+  `daniel_lions` — add a new story by adding one entry here). `ui/StorySelectionScreen.kt` renders a card per
   `StoryLibrary` entry with a Play button. `ui/BibleStorybookApp.kt` is the
   top-level composable (set as `MainActivity`'s content) that switches
   between `StorySelectionScreen` and `StoryBookScreen` using plain local
