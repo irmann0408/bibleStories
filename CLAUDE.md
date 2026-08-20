@@ -270,6 +270,14 @@ StoryRepository → StoryPage → { Video, Narration, Hotspots }
   the system gesture-nav area on every device. Takes an `onBack` callback,
   invoked both by a visible back button and by `BackHandler` (system back
   gesture/button).
+- **Watermark cover**: every source video (1280x720) carries a fixed
+  AI-generation watermark in its bottom-right corner. Since videos always
+  render at full screen width with vertical letterboxing (`RESIZE_MODE_FIT`
+  on a 16:9 source — see `StoryVideoBackground`), that spot's on-screen
+  position is derived in `StoryBookScreen` from the screen dimensions and
+  covered with a small `res/drawable-nodpi/walk_in_faith_icon.png` badge.
+  If a future story's video isn't 16:9, this positioning will need
+  revisiting.
 - **Multi-story navigation**: `model/Story.kt` wraps a story's `id`,
   `title`, and `pages`; `story/StoryLibrary.kt` lists every playable
   `Story` (`david_and_goliath`, `noahs_ark`, `good_samaritan`,

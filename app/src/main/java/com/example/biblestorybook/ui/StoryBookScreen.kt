@@ -2,6 +2,7 @@ package com.example.biblestorybook.ui
 
 import android.net.Uri
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
@@ -32,12 +34,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
+import com.example.biblestorybook.R
 import com.example.biblestorybook.model.StoryPage
+import kotlin.math.roundToInt
 
 @Composable
 fun StoryBookScreen(
@@ -115,6 +122,33 @@ fun StoryBookScreen(
                     onTriggered = { /* TODO v2: handleHotspotAction(it) */ }
                 )
             }
+
+            // Every source video (1280x720) carries a small AI-generation
+            // watermark at a fixed spot in its bottom-right corner. Videos
+            // always render at full screen width with vertical letterboxing
+            // (RESIZE_MODE_FIT on a 16:9 source), so that spot's on-screen
+            // position can be derived here and covered with a small badge.
+            // If a future story's source video isn't 16:9, this will need
+            // to be revisited.
+            val videoHeightPx = screenWidthPx * 9f / 16f
+            val videoTopPx = (screenHeightPx - videoHeightPx) / 2f
+            val badgeSize = 64.dp
+            val badgeSizePx = with(LocalDensity.current) { badgeSize.toPx() }
+            val watermarkCenterXPx = screenWidthPx * 0.938f
+            val watermarkCenterYPx = videoTopPx + videoHeightPx * 0.842f
+
+            Image(
+                painter = painterResource(R.drawable.walk_in_faith_icon),
+                contentDescription = null,
+                modifier = Modifier
+                    .offset {
+                        IntOffset(
+                            x = (watermarkCenterXPx - badgeSizePx / 2).roundToInt(),
+                            y = (watermarkCenterYPx - badgeSizePx / 2).roundToInt()
+                        )
+                    }
+                    .size(badgeSize)
+            )
         }
 
         Button(
