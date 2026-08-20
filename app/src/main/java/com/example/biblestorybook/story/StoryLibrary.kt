@@ -28,6 +28,16 @@ object StoryLibrary {
             id = "daniel_lions",
             title = "Daniel in the Lion's Den",
             pages = DanielLionsStory.pages
+        ),
+        Story(
+            id = "esther",
+            title = "Esther",
+            pages = EstherStory.pages
+        ),
+        Story(
+            id = "battle_of_jericho",
+            title = "Battle of Jericho",
+            pages = BattleOfJerichoStory.pages
         )
     )
 }

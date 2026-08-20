@@ -9,7 +9,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -27,7 +29,8 @@ import com.example.biblestorybook.ui.theme.Gold40
 /**
  * Landing screen: lets the child pick which story to play. Renders
  * whatever [StoryLibrary.stories] currently contains, so a new story only
- * needs a [StoryLibrary] entry to show up here.
+ * needs a [StoryLibrary] entry to show up here. Scrollable since the list
+ * no longer fits on one screen once more than a few stories are added.
  */
 @Composable
 fun StorySelectionScreen(
@@ -39,6 +42,7 @@ fun StorySelectionScreen(
             .fillMaxSize()
             .background(Brown40)
             .windowInsetsPadding(WindowInsets.safeDrawing)
+            .verticalScroll(rememberScrollState())
             .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(24.dp)
